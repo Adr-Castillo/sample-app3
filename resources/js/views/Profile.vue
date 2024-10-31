@@ -44,13 +44,13 @@
 
     <!-- current announcements --><!--eventually could be a carousel-->
     <div class="bg-red-500/20 px-6 flex flex-col justify-center font-bold">
-        <p class="text-2xl">Welcome to the dashboard, Adrian...</p>
+        <p class="text-xl">Welcome to the dashboard, Adrian...</p>
         <p>This is the 1st iteration of MIC.com :) | We are in the process ofbuilding this website!</p>
     </div>
 
     <!-- main dashboard -->
     <div
-        class="h-screen bg-green-300/15 grid grid-cols-5 px-6 border-green-500 border-2"
+        class="min-h-screen bg-blue-600/55 grid grid-cols-5 p-6"
     >
         <!--left side | introduction SAVED FOR LATER-->
         <div class="col-span-2 flex flex-col place-content-center items-center">
@@ -61,21 +61,20 @@
         </div>
 
         <!-- right side | Todo List -->
-        <div class="w-full h-fit col-span-3 bg-black/10">
+        <div class="w-full h-fit col-span-3 flex flex-col gap-10 rounded-lg bg-white p-6">
             <!--Todo List | input & submission form-->
-            <div class="col-span-3 grid grid-cols-3 items-center gap-4 border-2 border-red-500">
-                <p class="text-xl font-bold p-2">What would you like to do today?</p>
-                <input type="text" v-model="newTask" placeholder="Add a task" />
-                <button @click="addTask">Submit</button>
+            <div class="col-span-3 grid grid-cols-3 items-center gap-4 border-2">
+                <label for="task_input">What would you like to do today?</label>
+                <input id="task_input" type="text" v-model="new_task" @keyup.enter="addTask" placeholder="Add a task" />
+                <button type="submit" @click="addTask">Submit</button>
             </div>
 
-            <!--Todo List | task list-->
+            <!--Todo List | task list--> <!--TODO: make this a scrollable list AND make the checkboxes work-->
             <div class="h-[15%] items-center gap-4 border-2 border-red-500">
-                <p>Tasks</p>
-                <p>Sasks</p>
-                <div class="text-xl border-2 border-blue-500 px-2"><p>{{ new_task }}</p> </div>
-                <p>Flasks</p>
-                <p>Basks</p>
+                <div v-for="task in tasks" class="flex items-center justify-between border-2 border-blue-500 px-2">
+                    <label for="checkbox">{{ task }}</label>
+                    <input type="checkbox" id="checkbox" v-model="checked" />
+                </div>
             </div>
         </div>
     </div>
@@ -87,8 +86,18 @@ export default {
     data() {
         return {
             new_task: "",
+            tasks: [],
         }
     },
-
+    methods: {
+        addTask() {
+            if (this.new_task.length < 1) {
+                alert("Please enter a task");
+                return;
+            };
+            this.tasks.push(this.new_task.trim());
+            this.new_task = "";
+        }
+    }
 };
 </script>
