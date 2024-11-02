@@ -34,7 +34,7 @@
             </div>
 
             <!-- current announcements --><!--eventually could be a carousel-->
-            <div class="bg-[#F30A49] px-6 grid font-bold">
+            <div class="bg-[#04879C] px-6 grid font-bold">
                 <p>This is the 1st iteration of <span class="text-blue-600">MIC.com :)</span> | We are in the process of building this website!</p>
             </div>
 
@@ -49,20 +49,20 @@
                 </div>
 
                 <!-- right side | Todo List -->
-                <div class="h-[600px] col-span-3 m-4 p-9 bg-gradient-to-r from-white to-[#F9FAFB] drop-shadow-xl">
+                <div class="h-[600px] col-span-3 m-4 p-9 bg-gradient-to-tr rounded-bl-lg from-[#04879C] to-[#F9FAFB] opacity-75 drop-shadow-2xl">
                     <div class="w-full h-fit grid gap-6">
                         <!--Todo List | input & submission form-->
-                        <div class="h-fit grid grid-cols-5 gap-6">
+                        <div class="grid grid-cols-5 gap-6 items-center">
                             <div class="flex col-span-3 border-b-2 border-black">
                                 <label class="w-full">
-                                    <input class="w-full"  type="text" v-model="new_task" @keyup.enter="addTask" placeholder="What would you like to do today?" />
+<!--focus:outline-none-->           <input class="w-full h-[32px] border border-transparent focus:outline-none focus:ring-2 focus:ring-[#04879C]/20" v-model="new_task" @keyup.enter="addTask" placeholder="What would you like to do today?" />
                                 </label>
                             </div>
-                            <button :disabled="!new_task" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C] disabled:opacity-50" @click="addTask" type="button">Submit Task</button>
+                            <button :disabled="!new_task" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C]" :class="!new_task ? 'opacity-50' : 'opacity-100'" @click="addTask" type="button">Submit Task</button>
                         </div>
 
                         <!--Todo List | task list--><!--TODO: make this a scrollable list AND make the checkboxes work-->
-                        <div class="w-full h-fit max-h-[400px] gap-4 overflow-y-auto divide-y drop-shadow-lg">
+                        <div class="w-full h-fit max-h-[400px] gap-4 overflow-y-auto divide-y drop-shadow-lg border-b-2 border-black">
                             <div v-for="(task, index) in tasks" :key="index"
                                 class="grid grid-cols-5 px-2 py-1 bg-gradient-to-r from-white to-[#F9FAFB] border-l-8 border-black/10 border-l-transparent hover:border-l-[#04879C]">
                                 <label class="col-span-4 truncate":for="index + 'checkbox'">{{ task }}</label>
