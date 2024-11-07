@@ -1,6 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\toDoListController;
+use App\Http\Controllers\TaskController;
 
-Route::post('/saveTask', action: [toDoListController::class, 'saveTask'])->name('saveTask');
+

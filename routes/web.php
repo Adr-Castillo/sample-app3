@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use app\Http\Controllers\toDoListController;
-
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,5 +19,9 @@ use app\Http\Controllers\toDoListController;
 Route::get('/{vue_capture?}', function() {
     return view('welcome');
 })->where('vue_capture', '[\/\w\.-]*');
+
+Route::resource('/tasks', TaskController::class);
+
+// Route::get('/user/{id}', [UserController::class, 'show']);
 
 

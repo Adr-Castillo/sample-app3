@@ -55,10 +55,10 @@
                         <div class="h-fit grid grid-cols-5 gap-6">
                             <div class="flex col-span-3 border-b-2 border-black">
                                 <label class="w-full">
-                                    <input class="w-full"  type="text" v-model="new_task" @keyup.enter="addTask" placeholder="What would you like to do today?" />
+                                    <input class="w-full"  type="text" v-model="new_task" @keyup.enter="handleTask" placeholder="What would you like to do today?" />
                                 </label>
                             </div>
-                            <button :disabled="!new_task" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C] disabled:opacity-50" @click="addTask" type="button">Submit Task</button>
+                            <button :disabled="!new_task" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C] disabled:opacity-50" @click="handleTask" type="button">Submit Task</button>
                         </div>
 
                         <!--Todo List | task list--><!--TODO: make this a scrollable list AND make the checkboxes work-->
@@ -80,6 +80,7 @@
 <script>
 
 import { Icon } from '@iconify/vue';
+import axios from 'axios';
 
 export default {
     name: "Profile",
@@ -90,13 +91,17 @@ export default {
         };
     },
     methods: {
-        addTask() {
-            if (this.new_task.length < 1) {
-                alert("Please enter a task");
-                return;
-            }
-            this.tasks.push(this.new_task.trim());
-            this.new_task = "";
+        handleTask() {
+            axios.post('/tasks', { task: this.new_task })
+                .then(response => {
+                    this.tasks.push(response.data.task);
+                    this.new_task = "";
+                    console.log(response.data);
+                    alert("Tasks fetched successfully");
+                })
+                .catch(error => {
+                    console.error('Error:', error.response || error.message || error);
+                });
         },
     },
     components: {
