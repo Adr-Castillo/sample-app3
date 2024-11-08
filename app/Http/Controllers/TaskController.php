@@ -11,7 +11,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $tasks = Tasks::all();
+        return response()->json($tasks);
+        
     }
 
     /**
@@ -63,6 +65,8 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $task = Tasks::findOrFail($id);
+        $task->delete();
+        return response()->noContent();
     }
 }

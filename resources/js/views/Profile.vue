@@ -28,7 +28,7 @@
 
                     <!-- user profile pic -->
                     <div class="w-[50px] h-[50px] rounded-full relative overflow-hidden">
-                        <img class="w-full h-full object-cover" src="/public/images/vegeta.png" alt="profilePic" />
+                        <img class="w-full h-full object-cover" src="/public/images/piccolo.jpg" alt="profilePic" />
                     </div>
                 </div>
             </div>
@@ -53,29 +53,37 @@
                     <div class="w-full h-fit grid gap-6">
                         <!--Todo List | input & submission form-->
                         <div class="grid grid-cols-5 gap-6 items-center">
-                            <div class="col-span-3 border-b-2 border-black">
-                                <label class="w-[40%]">
-                                    <input class="w-full"  type="text" v-model="new_task.name" @keyup.enter="handleTask" placeholder="Task Name" />
-                                </label>
-                                <label class="w-full">
-                                    <input class="w-full"  type="text" v-model="new_task.task" @keyup.enter="handleTask" placeholder="What would you like to do today?" />
+                            <div class="col-span-3 flex flex-col border-b-2 border-black">
+                                <label>
+                                    <input class="w-full"  type="text" v-model="new_task.name" @keyup.enter="createTask" placeholder="Task Name:" />
                                 </label>
                             </div>
-                            <button :disabled="!new_task" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C] disabled:opacity-50" @click="handleTask" type="button">Submit Task</button>
+                            <button :disabled="!new_task.name" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C] disabled:opacity-50" @click="createTask" type="button">Submit Task</button>
+
+                            <!--Enter Task Description to add to task list-->
+                            <div v-if="descTask" class="col-span-5 flex flex-col border-b-2 border-black">
+                                <label>
+                                    <input class="w-full"  type="text" v-model="new_task.task" @keyup.enter="handleTask" placeholder="Task Description:" />
+                                </label>
+                            </div>
                         </div>
                         <!--Todo List | task list--><!--TODO: make this a scrollable list AND make the checkboxes work-->
                         <div class="w-full h-fit max-h-[400px] gap-4 overflow-y-auto divide-y drop-shadow-lg border-b-2 border-black">
                             <div v-for="(task, index) in tasks" :key="index"
-                                class="grid grid-cols-6 px-2 py-1 bg-gradient-to-r from-white to-[#F9FAFB] border-l-8 border-black/10 border-l-transparent hover:border-l-[#04879C]">
-                                <label class="col-span-4 truncate":for="index + 'checkbox'">{{ task.name }}</label>
+                                class="grid grid-cols-6 px-2 py-1 bg-gradient-to-b from-white to-[#F9FAFB] border-l-8 border-black/10 border-l-transparent hover:border-l-[#04879C]">
+                                <label class="col-span-4 truncate font-bold":for="index + 'checkbox'">{{ task.name }}</label>
                                 <div class="col-span-2 flex items-center justify-end">
                                     <input class="accent-[#04879C]" type="checkbox" :id="index + 'checkbox'" />
                                     <button type="button" @click="task.showDesc = !task.showDesc" :id="index + 'button'"> <Icon icon="mdi:arrow-down" class="text-red-500"></Icon></button>
                                 </div>
                                 
-                                <!--Task Description-->
-                                <div v-if="task.showDesc">
-                                    <p>{{ task.task }}</p>
+                                <!--Task Description & Delete Button-->
+                                <div v-if="task.showDesc" class="col-span-6 flex flex-col gap-2">
+                                    <div class="w-full">{{ task.task }}</div>
+                                    <div class="w-full flex gap-2">
+                                        <button type="button" class="w-full flex items-center justify-center bg-[#04879C] text-white font-semibold rounded-lg" @click="markAsCompleted(task.id)">Mark as Completed<Icon icon="mdi:check" class="text-white"></Icon></button>
+                                        <button type="button" class="w-full flex justify-center bg-[#F30A49] text-white font-semibold rounded-lg" @click="deleteTask(task.id)"> Delete<Icon icon="mdi:delete-empty" class="text-white"></Icon></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -101,11 +109,19 @@ export default {
             },
             tasks: [],
             showDesc: false,
+            descTask: false,
         };
     },
+    mounted() {
+        axios.get('/tasks').then(response => {
+            this.tasks = response.data;
+            console.log(response.data);
+        });
+    },
     methods: {
+
         handleTask() {
-            if (this.new_task.name.length > 0 && this.new_task.task.length > 0) {
+            if (this.new_task.name && this.new_task.task) {
                 axios.post('/tasks', { name: this.new_task.name, task: this.new_task.task })
                     .then(response => {
                         this.tasks.push(response.data);
@@ -114,11 +130,15 @@ export default {
                             task: "",
                     };
                     console.log(response.data);
-                    alert("Tasks fetched successfully");
-                })
-                .catch(error => {
-                    console.error('Error:', error.response || error.message || error);
-                });}
+                })}
+                else {
+                    alert("Please enter a Task Name & Description.");
+                }
+        },
+        deleteTask(id) {
+            axios.delete(`/tasks/${id}`).then(response => {
+                this.tasks = this.tasks.filter(task => task.id !== id);
+            });
         },
     },
     components: {

@@ -15,12 +15,12 @@ use App\Http\Controllers\TaskController;
 */
 
 // Uses the Vue Router for any route not defined before this
+Route::resource('/tasks', TaskController::class);
 
 Route::get('/{vue_capture?}', function() {
     return view('welcome');
 })->where('vue_capture', '[\/\w\.-]*');
 
-Route::resource('/tasks', TaskController::class);
 
 // Route::get('/user/{id}', [UserController::class, 'show']);
 
