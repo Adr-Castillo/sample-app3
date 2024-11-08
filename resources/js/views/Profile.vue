@@ -53,21 +53,30 @@
                     <div class="w-full h-fit grid gap-6">
                         <!--Todo List | input & submission form-->
                         <div class="grid grid-cols-5 gap-6 items-center">
-                            <div class="flex col-span-3 border-b-2 border-black">
+                            <div class="col-span-3 border-b-2 border-black">
+                                <label class="w-[40%]">
+                                    <input class="w-full"  type="text" v-model="new_task.name" @keyup.enter="handleTask" placeholder="Task Name" />
+                                </label>
                                 <label class="w-full">
-                                    <input class="w-full"  type="text" v-model="new_task" @keyup.enter="handleTask" placeholder="What would you like to do today?" />
+                                    <input class="w-full"  type="text" v-model="new_task.task" @keyup.enter="handleTask" placeholder="What would you like to do today?" />
                                 </label>
                             </div>
                             <button :disabled="!new_task" class="col-span-2 text-white py-1 rounded-lg bg-[#04879C] disabled:opacity-50" @click="handleTask" type="button">Submit Task</button>
                         </div>
-
                         <!--Todo List | task list--><!--TODO: make this a scrollable list AND make the checkboxes work-->
                         <div class="w-full h-fit max-h-[400px] gap-4 overflow-y-auto divide-y drop-shadow-lg border-b-2 border-black">
                             <div v-for="(task, index) in tasks" :key="index"
-                                class="grid grid-cols-5 px-2 py-1 bg-gradient-to-r from-white to-[#F9FAFB] border-l-8 border-black/10 border-l-transparent hover:border-l-[#04879C]">
-                                <label class="col-span-4 truncate":for="index + 'checkbox'">{{ task }}</label>
-                                <input class="col-span-1 place-self-end self-center accent-[#04879C]" type="checkbox" :id="index + 'checkbox'" />
-                                <!--Is there a better way to center the checkbox? I changed it from flex to grid because of the truncation-->
+                                class="grid grid-cols-6 px-2 py-1 bg-gradient-to-r from-white to-[#F9FAFB] border-l-8 border-black/10 border-l-transparent hover:border-l-[#04879C]">
+                                <label class="col-span-4 truncate":for="index + 'checkbox'">{{ task.name }}</label>
+                                <div class="col-span-2 flex items-center justify-end">
+                                    <input class="accent-[#04879C]" type="checkbox" :id="index + 'checkbox'" />
+                                    <button type="button" @click="task.showDesc = !task.showDesc" :id="index + 'button'"> <Icon icon="mdi:arrow-down" class="text-red-500"></Icon></button>
+                                </div>
+                                
+                                <!--Task Description-->
+                                <div v-if="task.showDesc">
+                                    <p>{{ task.task }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -86,22 +95,30 @@ export default {
     name: "Profile",
     data() {
         return {
-            new_task: "",
+            new_task: {
+                name: "",
+                task: "",
+            },
             tasks: [],
+            showDesc: false,
         };
     },
     methods: {
         handleTask() {
-            axios.post('/tasks', { task: this.new_task })
-                .then(response => {
-                    this.tasks.push(response.data.task);
-                    this.new_task = "";
+            if (this.new_task.name.length > 0 && this.new_task.task.length > 0) {
+                axios.post('/tasks', { name: this.new_task.name, task: this.new_task.task })
+                    .then(response => {
+                        this.tasks.push(response.data);
+                        this.new_task = {
+                            name: "",
+                            task: "",
+                    };
                     console.log(response.data);
                     alert("Tasks fetched successfully");
                 })
                 .catch(error => {
                     console.error('Error:', error.response || error.message || error);
-                });
+                });}
         },
     },
     components: {
