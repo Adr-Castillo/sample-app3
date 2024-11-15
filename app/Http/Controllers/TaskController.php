@@ -11,17 +11,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Tasks::all();
-        return response()->json($tasks);
+        return Tasks::all();
+        // return response()->json($tasks);
         
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -29,11 +21,17 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $task = Tasks::create([
-            'task' => $request->input('task'),
-            'name' => $request->input('name'),
+
+        $data = $request->validate([
+            'name'=> ['required'],
+            'task'=>['required', 'max:50'],
+            // 'user_id' => ['required','exists:users, id']
         ]);
-        return response()->json($task);
+
+
+        $task = Tasks::create($data);
+
+        return response()->json($data);
     }
 
     /**
