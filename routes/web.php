@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +23,10 @@ Route::resource('/tasks', TaskController::class);
 Route::get('/{vue_capture?}', function() {
     return view('welcome');
 })->where('vue_capture', '[\/\w\.-]*');
+
+Route::post("/register", [AuthController::class,"register"]);
+Route::post("/login", [AuthController::class,"login"]);
+
 
 
 // Route::get('/user/{id}', [UserController::class, 'show']);
