@@ -28,7 +28,7 @@
 
                     <!-- user profile pic -->
                     <div class="w-[50px] h-[50px] rounded-full relative overflow-hidden">
-                        <img class="w-full h-full object-cover" src="/public/images/piccolo.jpg" alt="profilePic" />
+                        <img class="w-full h-full object-cover" src="../assets/images/piccolo.jpg" alt="profilePic" />
                     </div>
                 </div>
             </div>

@@ -33,7 +33,7 @@ class="h-[600px] col-span-3 m-4 p-9 bg-gradient-to-tr rounded-bl-lg from-[#04879
             <div>Current Tasks</div>
             <div>Select All</div>
             <div class="col-span-2 flex items-center justify-end">
-                <button type="button" @click="currentTasks = !currentTasks" :id="index + 'button'">
+                <button type="button" @click="currentTasks = !currentTasks">
                     <div v-if=!currentTasks>
                         <Icon icon="clarity:eye-show-solid" class="text-white-500"></Icon>
                     </div>
